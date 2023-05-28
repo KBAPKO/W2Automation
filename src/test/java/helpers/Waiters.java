@@ -8,10 +8,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class Waiters {
-    public static WebElement waitForVisibility(int duration,
-                                               WebDriver driver,
+    public static WebElement waitForVisibility(WebDriver driver,
                                                WebElement element) {
-        return new WebDriverWait(driver, Duration.ofSeconds(duration))
+        return new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(element));
     }
 }

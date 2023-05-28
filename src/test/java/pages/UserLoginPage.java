@@ -1,16 +1,15 @@
 package pages;
 
 import helpers.Waiters;
+import helpers.WebElementExtended;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 
-import java.util.List;
-
-public class MemberLoginPage {
+public class UserLoginPage {
 
     private final WebDriver driver;
 
@@ -23,51 +22,68 @@ public class MemberLoginPage {
     @FindBy(css = ".btn-primary")
     private WebElement loginButton;
 
-    @FindAll(@FindBy(css = ".inline-error"))
-    private List<WebElement> listOfMessage;
+    @FindBy(xpath = "//input[@type='email']/parent::*//div[@class='inline-error']")
+    private WebElement emailError;
+
+    @FindBy(css = ".password-container .inline-error")
+    private WebElement passwordError;
 
     @FindBy(css = ".bodyMainBold")
     private WebElement incorrectDataIcon;
 
-    public MemberLoginPage(WebDriver driver) {
+    public UserLoginPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
     @Step("Вставили логин {email} в поле ввода email")
-    public MemberLoginPage insertMemberEmail(String email) {
-        Waiters.waitForVisibility(10, driver, memberEmailField);
+    public UserLoginPage insertMemberEmail(String email) {
         memberEmailField.sendKeys(email);
         return this;
     }
 
     @Step("Вставили пароль {password} в поле ввода пароля")
-    public MemberLoginPage insertMemberPassword(String password) {
+    public UserLoginPage insertMemberPassword(String password) {
         memberPasswordField.sendKeys(password);
         return this;
     }
 
     @Step("Нажали кнопку логина")
-    public MemberLoginPage clickLoginButton() {
+    public UserLoginPage clickLoginButton() {
         loginButton.click();
         return this;
     }
 
-    public String getAlertMessageText(int index) {
-        return Waiters.waitForVisibility(10, driver, listOfMessage
-                        .get(index))
-                .getText();
+    public String getErrorEmailText() {
+        return emailError.getText();
+    }
+
+    public String getErrorPasswordText() {
+        return passwordError.getText();
     }
 
     public boolean alertIconAppeared() {
-        return Waiters.waitForVisibility(10, driver, incorrectDataIcon)
+        Waiters.waitForVisibility(driver, incorrectDataIcon)
                 .isDisplayed();
+        return false;
     }
 
     @Step("переместили фокус на поля ввода пароля и логина")
-    public MemberLoginPage clickLoginFields() {
-        memberEmailField.click();
-        memberPasswordField.click();
+    public UserLoginPage clickLoginFields() {
+        Waiters.waitForVisibility(driver,memberEmailField)
+                .click();
+        Waiters.waitForVisibility(driver,memberPasswordField)
+                .click();
+        return this;
+    }
+
+    public UserLoginPage assertEmailErrorText(String text) {
+        Assert.assertEquals(getErrorEmailText(),text);
+        return this;
+    }
+
+    public UserLoginPage assertPasswordErrorText(String text) {
+        Assert.assertEquals(getErrorPasswordText(),text);
         return this;
     }
 }

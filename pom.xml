@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>TestSimbir</artifactId>
+    <artifactId>W2Automation</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.6.0</version>
+            <version>7.3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -85,6 +85,11 @@
             <artifactId>allure-testng</artifactId>
             <version>2.20.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.yandex.qatools.ashot</groupId>
+            <artifactId>ashot</artifactId>
+            <version>1.5.4</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
