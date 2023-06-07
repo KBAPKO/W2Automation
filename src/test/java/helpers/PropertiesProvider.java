@@ -8,7 +8,7 @@ public class PropertiesProvider {
 
     static private Properties property;
 
-    public static String getProperty(String key) {
+    public static String getProperty(final String key) {
         if (property == null) {
             initData();
         }

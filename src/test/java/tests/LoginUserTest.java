@@ -2,8 +2,13 @@ package tests;
 
 import helpers.AllureListeners;
 import helpers.PropertiesProvider;
-import io.qameta.allure.*;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -13,6 +18,13 @@ import pages.UserLoginPage;
 public class LoginUserTest extends BaseTest {
 
     private static final String INCORRECT_LOGIN = "FTC_MaxSh";
+
+    @BeforeMethod
+    private void openURL() {
+        driver.get(PropertiesProvider.getProperty("w2aSiteURL"));
+        driver.manage().window().maximize();
+    }
+
     @DataProvider(name = "authorization")
     public Object[][] authorizationData() {
         return new Object[][]{{PropertiesProvider.getProperty("correctEmail"),
@@ -28,35 +40,35 @@ public class LoginUserTest extends BaseTest {
     @Story("Проверка авторизации разных комбинаций")
     @Test(dataProvider = "authorization")
     @Severity(SeverityLevel.BLOCKER)
-    public void loginMemberTest(String email, String password, int id) {
-        UserLoginPage memberLoginPage = new UserLoginPage(driver);
-        memberLoginPage.insertMemberEmail(email)
-                .insertMemberPassword(password)
+    public void loginUserTest(final String email,
+                              final String password, final int id) {
+        UserLoginPage userLoginPage = new UserLoginPage(driver);
+        userLoginPage.insertUserEmail(email)
+                .insertUserPassword(password)
                 .clickLoginFields();
         switch (id) {
             case (1):
-                memberLoginPage.clickLoginButton();
+                userLoginPage.clickLoginButton();
                 Assert.assertNotEquals(PropertiesProvider.getProperty("w2aSiteURL"),
                         driver.getCurrentUrl());
                 break;
             case (2):
-                memberLoginPage.assertPasswordErrorText("This field is required");
+                userLoginPage.assertPasswordErrorText("This field is required");
                 break;
             case (3):
-                memberLoginPage.assertEmailErrorText("This field is required");
+                userLoginPage.assertEmailErrorText("This field is required");
                 break;
             case (4):
-                memberLoginPage.assertEmailErrorText("Please provide a valid email address");
+                userLoginPage.assertEmailErrorText("Please provide a valid email address");
                 break;
             case (5):
-                memberLoginPage.assertEmailErrorText("This field is required")
+                userLoginPage.assertEmailErrorText("This field is required")
                         .assertPasswordErrorText("This field is required")
                         .clickLoginButton();
-                Assert.assertTrue(memberLoginPage.alertIconAppeared());
+                Assert.assertTrue(userLoginPage.alertIconAppeared());
                 break;
             default:
                 throw new IllegalArgumentException("Неверные вводные данные");
         }
     }
 }
-
